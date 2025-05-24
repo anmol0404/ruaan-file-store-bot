@@ -75,6 +75,7 @@ function main() {
                         throw Error("Please provide WEBHOOK_DOMAIN");
                     }
                     server = express();
+                    server.use(express.json());
                     server.get("/check", function (req, res) {
                         res.sendStatus(200);
                         // setInterval(() => {
