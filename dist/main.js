@@ -89,7 +89,7 @@ function main() {
                                 case 0:
                                     _a.trys.push([0, 3, , 4]);
                                     query = req.body.query;
-                                    console.log(req.body);
+                                    console.log("req.body	", req.body);
                                     userId = validateQuery(query);
                                     return [4 /*yield*/, getTokenFromDatabase(userId)];
                                 case 1:
