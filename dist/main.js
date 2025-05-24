@@ -89,6 +89,7 @@ function main() {
                                 case 0:
                                     _a.trys.push([0, 3, , 4]);
                                     query = req.body.query;
+                                    console.log(req.body);
                                     userId = validateQuery(query);
                                     return [4 /*yield*/, getTokenFromDatabase(userId)];
                                 case 1:
@@ -99,7 +100,7 @@ function main() {
                                     return [2 /*return*/, res.sendStatus(200)];
                                 case 3:
                                     error_1 = _a.sent();
-                                    console.error("Error in /api/track endpoint:", error_1.message);
+                                    console.error("Error in /track endpoint:", error_1.message);
                                     if (error_1.message.includes("Invalid") ||
                                         error_1.message.includes("userId")) {
                                         return [2 /*return*/, res.status(400).json({ error: error_1.message })];
