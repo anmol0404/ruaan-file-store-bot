@@ -89,7 +89,6 @@ function main() {
                             switch (_a.label) {
                                 case 0:
                                     _a.trys.push([0, 3, , 4]);
-                                    console.log("req.body	", req.body);
                                     query = req.body.query;
                                     userId = validateQuery(query);
                                     return [4 /*yield*/, getTokenFromDatabase(userId)];

@@ -134,13 +134,11 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                         .catch(function (error) { return console.error(error); })];
             case 5:
                 haveBotPremium = _p.sent();
-                console.log("isValidToken:", isValidToken);
                 if (!!isValidToken) return [3 /*break*/, 11];
                 return [4 /*yield*/, database.getFirstSortItem()];
             case 6:
                 firstItem = _p.sent();
                 if (!(firstItem && firstItem.sort && firstItem.sort.length > 0 && !haveBotPremium)) return [3 /*break*/, 9];
-                console.log("Token expired");
                 botLink = "https://t.me/".concat(env.botUserName);
                 userLink = "https://t.me/".concat(ctx.from.username || "tg://user?id=".concat(ctx.from.id));
                 return [4 /*yield*/, sendExpiredTokenToCtx(ctx, userLink, botLink)];
@@ -191,7 +189,6 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                     sessionData.page = ((_l = sessionData.page) !== null && _l !== void 0 ? _l : 0) + 1;
                 }
                 page = (_m = sessionData.page) !== null && _m !== void 0 ? _m : 0;
-                console.log(page, aIOData === null || aIOData === void 0 ? void 0 : aIOData.length);
                 if (!(isNext || isQuality)) return [3 /*break*/, 18];
                 if (!((page !== null && page !== void 0 ? page : 0) < aIOData.length)) return [3 /*break*/, 16];
                 return [4 /*yield*/, editResultsReply(ctx, sessionData.reqest || "user request", aIOData[page], sessionData, aIOData.length, page + 1)];

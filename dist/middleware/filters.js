@@ -41,51 +41,50 @@ import auth from "../services/auth.js";
 import database from "../services/database.js";
 export default {
     private: function (ctx, next) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         return __awaiter(this, void 0, void 0, function () {
-            var messageText, _m, command, args, _o, error_1, callbackData, msgId, message, firstName, homeMessage, homeKeyboard, backKeyboard, err_1;
-            return __generator(this, function (_p) {
-                switch (_p.label) {
+            var messageText, _l, command, args, _m, error_1, callbackData, msgId, message, firstName, homeMessage, homeKeyboard, backKeyboard, err_1;
+            return __generator(this, function (_o) {
+                switch (_o.label) {
                     case 0:
-                        console.log((_a = ctx.chat) === null || _a === void 0 ? void 0 : _a.id);
-                        if (!(ctx.message && "text" in ctx.message && auth.isAdmin((_c = (_b = ctx.from) === null || _b === void 0 ? void 0 : _b.id) !== null && _c !== void 0 ? _c : 0))) return [3 /*break*/, 10];
-                        messageText = (_d = ctx.message) === null || _d === void 0 ? void 0 : _d.text;
-                        _m = messageText.split(" "), command = _m[0], args = _m.slice(1);
-                        _p.label = 1;
+                        if (!(ctx.message && "text" in ctx.message && auth.isAdmin((_b = (_a = ctx.from) === null || _a === void 0 ? void 0 : _a.id) !== null && _b !== void 0 ? _b : 0))) return [3 /*break*/, 10];
+                        messageText = (_c = ctx.message) === null || _c === void 0 ? void 0 : _c.text;
+                        _l = messageText.split(" "), command = _l[0], args = _l.slice(1);
+                        _o.label = 1;
                     case 1:
-                        _p.trys.push([1, 8, , 10]);
-                        _o = command;
-                        switch (_o) {
+                        _o.trys.push([1, 8, , 10]);
+                        _m = command;
+                        switch (_m) {
                             case "/addsort": return [3 /*break*/, 2];
                             case "/deletesort": return [3 /*break*/, 4];
                         }
                         return [3 /*break*/, 6];
                     case 2: return [4 /*yield*/, handleUpdateFirstAndActive(ctx, args)];
                     case 3:
-                        _p.sent();
+                        _o.sent();
                         return [3 /*break*/, 7];
                     case 4: return [4 /*yield*/, deleteSort(ctx)];
                     case 5:
-                        _p.sent();
+                        _o.sent();
                         return [3 /*break*/, 7];
                     case 6: return [3 /*break*/, 7];
                     case 7: return [3 /*break*/, 10];
                     case 8:
-                        error_1 = _p.sent();
+                        error_1 = _o.sent();
                         console.error("Error handling command:", error_1);
                         return [4 /*yield*/, ctx.reply("An error occurred while processing your request.")];
                     case 9:
-                        _p.sent();
+                        _o.sent();
                         return [3 /*break*/, 10];
                     case 10:
                         if (!(ctx.callbackQuery && "data" in ctx.callbackQuery)) return [3 /*break*/, 17];
                         callbackData = ctx.callbackQuery.data;
-                        msgId = (_e = ctx.message) === null || _e === void 0 ? void 0 : _e.message_id;
-                        _p.label = 11;
+                        msgId = (_d = ctx.message) === null || _d === void 0 ? void 0 : _d.message_id;
+                        _o.label = 11;
                     case 11:
-                        _p.trys.push([11, 16, , 17]);
+                        _o.trys.push([11, 16, , 17]);
                         message = "";
-                        firstName = (((_g = (_f = ctx.message) === null || _f === void 0 ? void 0 : _f.from.first_name) === null || _g === void 0 ? void 0 : _g.replace(/[^a-zA-Z0-9]/g, "")) || "User").trim();
+                        firstName = (((_f = (_e = ctx.message) === null || _e === void 0 ? void 0 : _e.from.first_name) === null || _f === void 0 ? void 0 : _f.replace(/[^a-zA-Z0-9]/g, "")) || "User").trim();
                         switch (callbackData) {
                             case "addDrama":
                                 message = "use /add to add new drama";
@@ -109,7 +108,7 @@ export default {
                                 message = developerInfo;
                                 break;
                             case "refer":
-                                message = getInviteMessage(((_j = (_h = ctx.callbackQuery) === null || _h === void 0 ? void 0 : _h.from) === null || _j === void 0 ? void 0 : _j.first_name) || "user", ((_k = ctx.callbackQuery) === null || _k === void 0 ? void 0 : _k.from.id.toString()) || "");
+                                message = getInviteMessage(((_h = (_g = ctx.callbackQuery) === null || _g === void 0 ? void 0 : _g.from) === null || _h === void 0 ? void 0 : _h.first_name) || "user", ((_j = ctx.callbackQuery) === null || _j === void 0 ? void 0 : _j.from.id.toString()) || "");
                                 break;
                             case "home":
                                 message = "home";
@@ -138,7 +137,7 @@ export default {
                             })
                                 .catch(function (e) { return console.log(e); })];
                     case 12:
-                        _p.sent();
+                        _o.sent();
                         return [3 /*break*/, 15];
                     case 13:
                         backKeyboard = Markup.inlineKeyboard([
@@ -152,15 +151,15 @@ export default {
                             })
                                 .catch(function (e) { return console.log(e); })];
                     case 14:
-                        _p.sent();
-                        _p.label = 15;
+                        _o.sent();
+                        _o.label = 15;
                     case 15: return [3 /*break*/, 17];
                     case 16:
-                        err_1 = _p.sent();
+                        err_1 = _o.sent();
                         console.log("Error handling callback:", err_1);
                         return [3 /*break*/, 17];
                     case 17:
-                        if (((_l = ctx.chat) === null || _l === void 0 ? void 0 : _l.id) !== undefined) {
+                        if (((_k = ctx.chat) === null || _k === void 0 ? void 0 : _k.id) !== undefined) {
                             next();
                         }
                         return [2 /*return*/];
