@@ -54,6 +54,8 @@ app.command("edit", commands.editAIOHandler);
 app.command("addtopremium", commands.addToPremiumHandler);
 app.command("premium", commands.premiumHandler);
 app.command("broadcast", commands.broadcastHandler);
+var COOLDOWN_PERIOD = 60 * 1000; // 60 seconds
+var lastRequestTime = new Map();
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var domain, server, port_1, _a, _b;
@@ -84,13 +86,19 @@ function main() {
                         // res.send("working server!");
                     });
                     server.post("/track", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                        var query, userId, token, error_1;
+                        var query, userId, lastRequest, now, token, error_1;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
                                     _a.trys.push([0, 3, , 4]);
                                     query = req.body.query;
                                     userId = validateQuery(query);
+                                    lastRequest = lastRequestTime.get(userId);
+                                    now = Date.now();
+                                    if (lastRequest && (now - lastRequest < COOLDOWN_PERIOD)) {
+                                        return [2 /*return*/, res.status(429).json({ error: "Too many requests. Please try again later." })];
+                                    }
+                                    lastRequestTime.set(userId, now);
                                     return [4 /*yield*/, getTokenFromDatabase(userId)];
                                 case 1:
                                     token = _a.sent();

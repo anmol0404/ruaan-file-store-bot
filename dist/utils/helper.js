@@ -417,12 +417,14 @@ export function getTokenFromDatabase(userId) {
 // Send Telegram message with token
 export function sendTelegramMessage(userId, token) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_3;
+        var displayToken, message, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, telegram.app.telegram.sendMessage(Number(userId), "Your new token has been generated: ".concat(token.slice(0, 15), "...\nNow, click the \"Try Again\" button \uD83D\uDC46\uD83D\uDC46!"))];
+                    displayToken = token.slice(0, 20);
+                    message = "\u2728 *New Token Generated* !* \u2728\n\n\uD83D\uDD11 Your token: *".concat(displayToken, "...*\n\uD83D\uDC46\uD83D\uDC46 *Tap Try Again* to proceed!\uD83D\uDC46\uD83D\uDC46");
+                    return [4 /*yield*/, telegram.app.telegram.sendMessage(Number(userId), message)];
                 case 1:
                     _a.sent();
                     return [3 /*break*/, 3];
