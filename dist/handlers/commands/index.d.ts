@@ -6,6 +6,7 @@ import editAIOHandler from "./editAIO.js";
 import addToPremiumHandler from "./addToPremium.js";
 import premiumHandler from "./premium.js";
 import broadcastHandler from "./broadcast.js";
+import { deleteTokenHandler } from "./deleteToken.js";
 declare const _default: {
     startHandler: typeof startHandler;
     reqAIOHandler: typeof reqAIOHandler;
@@ -15,5 +16,6 @@ declare const _default: {
     premiumHandler: typeof premiumHandler;
     reqOGHandler: typeof reqOGHandler;
     broadcastHandler: typeof broadcastHandler;
+    deleteTokenHandler: typeof deleteTokenHandler;
 };
 export default _default;

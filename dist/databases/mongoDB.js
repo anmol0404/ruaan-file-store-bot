@@ -105,7 +105,6 @@ var MongoDB = /** @class */ (function () {
                         return [4 /*yield*/, this.UserModel.findOne({ id: Number(userId) })];
                     case 1:
                         userExists = _a.sent();
-                        console.log(userExists);
                         return [2 /*return*/, (userExists === null || userExists === void 0 ? void 0 : userExists.id) ? true : false];
                     case 2:
                         error_1 = _a.sent();
@@ -541,11 +540,11 @@ var MongoDB = /** @class */ (function () {
     };
     MongoDB.prototype.addBotPremium = function (userId, duration) {
         return __awaiter(this, void 0, void 0, function () {
-            var regex, match, value, unit, durationMs, subscriptionType, expiresAt, tokenData, error_9;
+            var regex, match, value, unit, durationMs, subscriptionType, expiresAt, tokenData, newTokenData, error_9;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 6, , 7]);
                         regex = /^(\d+)([smhd])$/;
                         match = duration.match(regex);
                         if (!match) {
@@ -590,13 +589,20 @@ var MongoDB = /** @class */ (function () {
                         return [4 /*yield*/, this.TokenModel.findOne({ userId: userId })];
                     case 1:
                         tokenData = _a.sent();
-                        if (!!tokenData) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.manageToken(userId).catch(function (error) { return console.error(error); })];
+                        if (!!tokenData) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.manageToken(userId)];
                     case 2:
                         _a.sent();
-                        console.error("Token not found for the user.");
-                        return [2 /*return*/, "Token not found for the user. try again later."];
+                        return [4 /*yield*/, this.TokenModel.findOne({ userId: userId })];
                     case 3:
+                        newTokenData = _a.sent();
+                        if (!newTokenData) {
+                            console.error("Failed to retrieve token after generation in addBotPremium.");
+                            return [2 /*return*/, "Failed to add premium. Please try again later."];
+                        }
+                        tokenData = newTokenData; // Assign the newly created/fetched tokenData
+                        _a.label = 4;
+                    case 4:
                         tokenData.bot_premium = {
                             is_bot_premium: true,
                             subscriptionType: subscriptionType ? subscriptionType : "Other",
@@ -606,15 +612,15 @@ var MongoDB = /** @class */ (function () {
                             details: "".concat(value, " ").concat(unit),
                         };
                         return [4 /*yield*/, tokenData.save()];
-                    case 4:
+                    case 5:
                         _a.sent();
                         console.log("Premium added for ".concat(userId, ", subscription type: ").concat(subscriptionType, ", expires at ").concat(expiresAt));
                         return [2 /*return*/, "Premium successfully added for ".concat(userId, ". Subscription type: ").concat(subscriptionType, ". Premium will expire on ").concat(expiresAt.toLocaleString(), ".")];
-                    case 5:
+                    case 6:
                         error_9 = _a.sent();
                         console.error("Error adding bot premium:", error_9);
                         return [2 /*return*/, "Error adding bot premium:  + ".concat(error_9)];
-                    case 6: return [2 /*return*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });
@@ -652,10 +658,34 @@ var MongoDB = /** @class */ (function () {
             });
         });
     };
+    MongoDB.prototype.deleteOldTokens = function (days) {
+        return __awaiter(this, void 0, void 0, function () {
+            var daysAgo, result, error_11;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        daysAgo = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+                        return [4 /*yield*/, this.TokenModel.deleteMany({
+                                expiresAt: { $lt: daysAgo },
+                            })];
+                    case 1:
+                        result = _a.sent();
+                        console.log("Deleted ".concat(result.deletedCount, " old tokens (older than ").concat(days, " days)."));
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_11 = _a.sent();
+                        console.error("Error deleting old tokens:", error_11);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     // sort link
     MongoDB.prototype.addLinkToFirstSort = function (newLink) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, error_11;
+            var result, error_12;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -665,8 +695,8 @@ var MongoDB = /** @class */ (function () {
                         result = _a.sent();
                         return [2 /*return*/, result.modifiedCount > 0];
                     case 2:
-                        error_11 = _a.sent();
-                        console.error("Error adding link to first sort:", error_11);
+                        error_12 = _a.sent();
+                        console.error("Error adding link to first sort:", error_12);
                         return [2 /*return*/, false];
                     case 3: return [2 /*return*/];
                 }
@@ -676,7 +706,7 @@ var MongoDB = /** @class */ (function () {
     // Function to get the first item in the sort array
     MongoDB.prototype.getFirstSortItem = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var document_1, error_12;
+            var document_1, error_13;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -690,8 +720,8 @@ var MongoDB = /** @class */ (function () {
                         }
                         return [2 /*return*/, document_1];
                     case 2:
-                        error_12 = _a.sent();
-                        console.error("Error retrieving first sort item:", error_12);
+                        error_13 = _a.sent();
+                        console.error("Error retrieving first sort item:", error_13);
                         return [2 /*return*/, null];
                     case 3: return [2 /*return*/];
                 }
@@ -701,7 +731,7 @@ var MongoDB = /** @class */ (function () {
     // Function to set the current active share ID
     MongoDB.prototype.setActiveShareId = function (newActiveShareId) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, error_13;
+            var result, error_14;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -711,8 +741,8 @@ var MongoDB = /** @class */ (function () {
                         result = _a.sent();
                         return [2 /*return*/, result.modifiedCount > 0];
                     case 2:
-                        error_13 = _a.sent();
-                        console.error("Error setting active share ID:", error_13);
+                        error_14 = _a.sent();
+                        console.error("Error setting active share ID:", error_14);
                         return [2 /*return*/, false];
                     case 3: return [2 /*return*/];
                 }
@@ -722,7 +752,7 @@ var MongoDB = /** @class */ (function () {
     // Function to update both the first sort and the current active path atomically
     MongoDB.prototype.updateFirstSortAndActivePath = function (newLink, newActiveShareId) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, error_14;
+            var result, error_15;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -736,8 +766,8 @@ var MongoDB = /** @class */ (function () {
                         result = _a.sent();
                         return [2 /*return*/, result.modifiedCount > 0 || result.upsertedCount > 0];
                     case 2:
-                        error_14 = _a.sent();
-                        console.error("Error updating first sort and active path:", error_14);
+                        error_15 = _a.sent();
+                        console.error("Error updating first sort and active path:", error_15);
                         return [2 /*return*/, false];
                     case 3: return [2 /*return*/];
                 }
@@ -746,7 +776,7 @@ var MongoDB = /** @class */ (function () {
     };
     MongoDB.prototype.deleteAllSortData = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var result, error_15;
+            var result, error_16;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -756,8 +786,8 @@ var MongoDB = /** @class */ (function () {
                         result = _a.sent();
                         return [2 /*return*/, result.deletedCount > 0];
                     case 2:
-                        error_15 = _a.sent();
-                        console.error("Error deleting all sort data:", error_15);
+                        error_16 = _a.sent();
+                        console.error("Error deleting all sort data:", error_16);
                         return [2 /*return*/, false];
                     case 3: return [2 /*return*/];
                 }

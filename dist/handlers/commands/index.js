@@ -6,6 +6,7 @@ import editAIOHandler from "./editAIO.js";
 import addToPremiumHandler from "./addToPremium.js";
 import premiumHandler from "./premium.js";
 import broadcastHandler from "./broadcast.js";
+import { deleteTokenHandler } from "./deleteToken.js";
 export default {
     startHandler: startHandler,
     reqAIOHandler: reqAIOHandler,
@@ -15,4 +16,5 @@ export default {
     premiumHandler: premiumHandler,
     reqOGHandler: reqOGHandler,
     broadcastHandler: broadcastHandler,
+    deleteTokenHandler: deleteTokenHandler,
 };

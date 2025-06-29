@@ -34,66 +34,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import auth from "../../services/auth.js";
 import database from "../../services/database.js";
-import { hasReplyToMessage, isTextMessage } from "../../utils/helper.js";
-export default function addToPremiumHandler(ctx) {
-    var _a, _b;
+export function deleteTokenHandler(ctx) {
     return __awaiter(this, void 0, void 0, function () {
-        var userId, firstName, args, addUserToPremium, duration, replyToMessage, result, err_1;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        var args, days, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
-                    userId = (_a = ctx.from) === null || _a === void 0 ? void 0 : _a.id;
-                    firstName = ((_b = ctx.from) === null || _b === void 0 ? void 0 : _b.first_name) || "user";
-                    args = isTextMessage(ctx.message) ? ctx.message.text.split(" ") : null;
-                    addUserToPremium = "";
-                    duration = "";
-                    if (!(!auth.isOwner(userId) || !userId)) return [3 /*break*/, 2];
-                    return [4 /*yield*/, ctx.reply("Sorry, you have no permission to do this")];
+                    _a.trys.push([0, 9, , 11]);
+                    if (!(!ctx.message || !("text" in ctx.message))) return [3 /*break*/, 2];
+                    return [4 /*yield*/, ctx.reply("This command must be used with text. Usage: /deletetoken <days>")];
                 case 1:
-                    _c.sent();
+                    _a.sent();
                     return [2 /*return*/];
                 case 2:
-                    if (!(!args || args.length < 1)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, ctx.reply("Please specify the day duration (e.g., /addtopremium 1d or /addtopremium userid 1d [for days]).")];
+                    args = ctx.message.text.split(' ').slice(1);
+                    if (!(!args || args.length === 0)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, ctx.reply("Please provide the number of days. Usage: /deletetoken <days>")];
                 case 3:
-                    _c.sent();
+                    _a.sent();
                     return [2 /*return*/];
                 case 4:
-                    if (!(args.length === 3)) return [3 /*break*/, 5];
-                    addUserToPremium = args[1];
-                    duration = args[2];
-                    return [3 /*break*/, 8];
+                    days = parseInt(args[0]);
+                    if (!(isNaN(days) || days < 0)) return [3 /*break*/, 6];
+                    return [4 /*yield*/, ctx.reply("Please provide a valid positive number for days.")];
                 case 5:
-                    if (!!hasReplyToMessage(ctx.message)) return [3 /*break*/, 7];
-                    return [4 /*yield*/, ctx.reply("Please reply to a user message to enable autoreply.")];
-                case 6:
-                    _c.sent();
+                    _a.sent();
                     return [2 /*return*/];
+                case 6: return [4 /*yield*/, database.deleteOldTokens(days)];
                 case 7:
-                    replyToMessage = ctx.message.reply_to_message;
-                    addUserToPremium = replyToMessage.from.id;
-                    duration = args[1];
-                    _c.label = 8;
+                    _a.sent();
+                    return [4 /*yield*/, ctx.reply("Successfully deleted tokens older than ".concat(days, " days."))];
                 case 8:
-                    _c.trys.push([8, 11, , 13]);
-                    return [4 /*yield*/, database.addBotPremium(addUserToPremium.toString(), duration)];
+                    _a.sent();
+                    return [3 /*break*/, 11];
                 case 9:
-                    result = _c.sent();
-                    return [4 /*yield*/, ctx.reply("[".concat(addUserToPremium, "](tg://user?id=").concat(addUserToPremium, ")\n").concat(result), {
-                            parse_mode: "Markdown",
-                        })];
+                    error_1 = _a.sent();
+                    console.error("Error in deleteTokenHandler:", error_1);
+                    return [4 /*yield*/, ctx.reply("Failed to delete old tokens. Please try again later.")];
                 case 10:
-                    _c.sent();
-                    return [3 /*break*/, 13];
-                case 11:
-                    err_1 = _c.sent();
-                    return [4 /*yield*/, ctx.reply("Failed to add user to premium. Please try again later.")];
-                case 12:
-                    _c.sent();
-                    return [3 /*break*/, 13];
-                case 13: return [2 /*return*/];
+                    _a.sent();
+                    return [3 /*break*/, 11];
+                case 11: return [2 /*return*/];
             }
         });
     });

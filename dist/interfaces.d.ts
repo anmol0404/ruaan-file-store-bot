@@ -38,6 +38,7 @@ export interface DatabaseClient {
     deleteAllSortData(): Promise<boolean>;
     addBotPremium(userId: string, duration: string): Promise<string>;
     getPremiumDetails(userId: string): Promise<string>;
+    deleteOldTokens(days: number): Promise<void>;
     addLinkToFirstSort(newLink: {
         shareId: number;
         aioShortUrl: string;

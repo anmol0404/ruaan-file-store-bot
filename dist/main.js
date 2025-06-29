@@ -54,6 +54,7 @@ app.command("edit", commands.editAIOHandler);
 app.command("addtopremium", commands.addToPremiumHandler);
 app.command("premium", commands.premiumHandler);
 app.command("broadcast", commands.broadcastHandler);
+app.command("deletetoken", commands.deleteTokenHandler);
 var COOLDOWN_PERIOD = 60 * 1000; // 60 seconds
 var lastRequestTime = new Map();
 function main() {
